@@ -1,0 +1,53 @@
+﻿@using Abp.Authorization.Users
+@using Acme.SimpleTaskApp.Web.Models.Common.Modals
+@using Acme.SimpleTaskApp.Web.Models.Products
+@model ProductViewModel
+@{
+    Layout = null;
+}
+<div class="modal fade" id="ProductCreateModal" tabindex="-1" role="dialog" aria-labelledby="ProductCreateModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            @await Html.PartialAsync("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("Tạo Mới Sản Phẩm"))
+            <form name="productCreateForm" role="form" class="form-horizontal" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" role="tab" href="#create-product-details">@("Thông tin sản phẩm")</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-4">
+                        <div role="tabpanel" class="tab-pane container active" id="create-product-details">
+                            <div class="form-group row required">
+                                <label class="col-md-3 col-form-label">@("Tên sản phẩm")</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="Name" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row required">
+                                <label class="col-md-3 col-form-label">@("Hình ảnh")</label>
+                                <div class="col-md-9">
+                                    <input type="file" class="form-control" name="Images" required>
+                                </div>
+                            </div>
+                            <div class="form-group row required">
+                                <label class="col-md-3 col-form-label">@("Giá")</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="Price" required>
+                                </div>
+                            </div>
+                            <div class="form-group row required">
+                                <label class="col-md-3 col-form-label">@("Số lượng trong kho")</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="StockQuantity" id="StockQuantity" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @await Html.PartialAsync("~/Views/Shared/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+            </form>
+        </div>
+    </div>
+</div>
