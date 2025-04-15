@@ -4,6 +4,7 @@ using Acme.SimpleTaskApp.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Acme.SimpleTaskApp.Migrations
 {
     [DbContext(typeof(SimpleTaskAppDbContext))]
-    partial class SimpleTaskAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250414094645_fix_table")]
+    partial class fix_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1583,24 +1586,6 @@ namespace Acme.SimpleTaskApp.Migrations
                     b.ToTable("AbpUsers");
                 });
 
-            modelBuilder.Entity("Acme.SimpleTaskApp.Categories.Category", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AppCategories");
-                });
-
             modelBuilder.Entity("Acme.SimpleTaskApp.Entities.Products.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -1609,21 +1594,11 @@ namespace Acme.SimpleTaskApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CategoryId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(65536)
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Images")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModificationTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1637,8 +1612,6 @@ namespace Acme.SimpleTaskApp.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("AppProducts");
                 });
@@ -1986,15 +1959,6 @@ namespace Acme.SimpleTaskApp.Migrations
                     b.Navigation("LastModifierUser");
                 });
 
-            modelBuilder.Entity("Acme.SimpleTaskApp.Entities.Products.Product", b =>
-                {
-                    b.HasOne("Acme.SimpleTaskApp.Categories.Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId");
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("Acme.SimpleTaskApp.MultiTenancy.Tenant", b =>
                 {
                     b.HasOne("Acme.SimpleTaskApp.Authorization.Users.User", "CreatorUser")
@@ -2100,11 +2064,6 @@ namespace Acme.SimpleTaskApp.Migrations
                     b.Navigation("Settings");
 
                     b.Navigation("Tokens");
-                });
-
-            modelBuilder.Entity("Acme.SimpleTaskApp.Categories.Category", b =>
-                {
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

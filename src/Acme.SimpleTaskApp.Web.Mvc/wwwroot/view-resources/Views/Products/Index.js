@@ -8,11 +8,24 @@
     console.log(_productAppService);
     var _$productsTable = _$table.DataTable({
         paging: true,
+        ordering: true,
         serverSide: true,
         listAction: {
-            ajaxFunction: _productAppService.getPaged,
+            ajaxFunction: _productAppService.getAll,
             inputFilter: function () {
-                return $('#ProductsSearchForm').serializeFormToObject(true);
+                var filter = $('#ProductsSearchForm').serializeFormToObject(true);
+
+                var dataTable = _$table.DataTable();
+                var order = dataTable.order(); // ví dụ: [[0, 'asc']]
+                if (order.length > 0) {
+                    var columnIndex = order[0][0];
+                    var direction = order[0][1]; // 'asc'/ 'desc'
+                    var sortField = dataTable.column(columnIndex).dataSrc(); // lay ten data cot set ở columnDefs
+
+                    filter.sorting = sortField + ' ' + direction;
+                }
+                console.log('Dữ liệu gửi đi:', filter);  // Kiểm tra giá trị filter
+                return filter;
             }
         },
         buttons: [
@@ -29,15 +42,30 @@
         },
         columnDefs: [
             { targets: 0, className: 'control', defaultContent: '' },
-            { targets: 1, data: 'name', sortable: false },
+            { targets: 1, data: 'name'},
             {
                 targets: 2, data: 'images', sortable: false, render: data => `<div class="text-center">
             <img src="${data}" class="img-thumbnail product-img" alt="Product Image">
         </div>` },
-            { targets: 3, data: 'price', sortable: false, render: data => `${new Intl.NumberFormat('vi-VN').format(data)} VNĐ` },
-            { targets: 4, data: 'stockQuantity', sortable: false },
+            { targets: 3, data: 'price', render: data => `${new Intl.NumberFormat('vi-VN').format(data)} VNĐ` },
+            { targets: 4, data: 'stockQuantity' },
+            { targets: 5, data: 'description', },
             {
-                targets: 5,
+                targets: 6, 
+                data: 'creationTime',
+                
+                render: function (data) {
+                    return data ? new Date(data).toLocaleString('vi-VN') : '';
+                }
+            },
+            {
+                targets: 7, data: 'lastModificationTime',
+                render: function (data) {
+                    return data ? new Date(data).toLocaleString('vi-VN') : '';
+                }
+            },
+            {
+                targets: 8,
                 data: null,
                 sortable: false,
                 render: (data, type, row, meta) => {
@@ -54,9 +82,8 @@
         ]
     });
 
-    //$.validator.addMethod("fileRequired", function (value, element) {
-    //    return element.files && element.files.length > 0;
-    //}, "Vui lòng chọn ảnh sản phẩm");
+
+
 
     $.validator.addMethod("fileImageOnly", function (value, element) {
         if (element.files && element.files.length > 0) {

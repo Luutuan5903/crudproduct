@@ -6,6 +6,7 @@ using Acme.SimpleTaskApp.MultiTenancy;
 using Acme.SimpleTaskApp.Tasks;
 using Acme.SimpleTaskApp.People;
 using Acme.SimpleTaskApp.Entities.Products;
+using Acme.SimpleTaskApp.Categories;
 
 namespace Acme.SimpleTaskApp.EntityFrameworkCore
 {
@@ -15,6 +16,9 @@ namespace Acme.SimpleTaskApp.EntityFrameworkCore
         public DbSet<Tasks.Tasks> Tasks { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Product> Products { get; set; }
+
+        public DbSet<Category> Categories { get; set; } 
+
         public SimpleTaskAppDbContext(DbContextOptions<SimpleTaskAppDbContext> options)
             : base(options)
         {

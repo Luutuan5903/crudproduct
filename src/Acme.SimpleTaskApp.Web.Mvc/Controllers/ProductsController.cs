@@ -20,9 +20,20 @@ public class ProductsController : SimpleTaskAppControllerBase
     public async Task<ActionResult> Index(GetAllProductsInput input)
     {
         var output = await _productAppService.GetAll(input);
-        var model = new ProductViewModel(output.Items);
+
+        var model = new ProductViewModel
+        {
+            Products = output.Items,
+            TotalCount = output.TotalCount,
+            Keyword = input.Keyword,
+            Sorting = input.Sorting,
+            MaxResultCount = input.MaxResultCount,
+            SkipCount = input.SkipCount
+        };
+
         return View(model);
     }
+
 
     public async Task<ActionResult> CreateProduct()
     {

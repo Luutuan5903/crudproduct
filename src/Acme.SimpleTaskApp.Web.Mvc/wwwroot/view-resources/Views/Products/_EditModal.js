@@ -50,11 +50,12 @@
     });
     function save() {
         if (!_$form.valid()) {
-            //alert("Validate data ");
             return;
         }
 
         var formData = new FormData(_$form[0]);
+
+        // Kiểm tra tất cả dữ liệu trong formData
         for (let pair of formData.entries()) {
             console.log(pair[0] + ':', pair[1]);
         }
@@ -70,8 +71,6 @@
                 _$modal.modal('hide');
                 _$form[0].reset();
                 abp.message.success('Cập nhật thông tin sản phẩm thành công');
-
-                
                 abp.event.trigger('product.edited');
             },
             error: function (xhr) {
@@ -82,6 +81,7 @@
             }
         });
     }
+
 
     _$form.closest('div.modal-content').find(".save-button").click(function (e) {
         e.preventDefault();

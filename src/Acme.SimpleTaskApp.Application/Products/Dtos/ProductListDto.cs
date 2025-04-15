@@ -26,5 +26,7 @@ namespace Acme.SimpleTaskApp.Products.Dto
 
         public DateTime CreationTime { get; set; }
 
+        public DateTime? LastModificationTime { get; set; }
+        public string Description { get; set; }
     }
 }
