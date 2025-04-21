@@ -1,0 +1,82 @@
+﻿@using Acme.SimpleTaskApp.Web.Models.Category
+@using Acme.SimpleTaskApp.Web.Startup
+@model CategoryViewModel
+@{
+    ViewBag.Title = L("Categories");
+    ViewBag.CurrentPageName = PageNames.Categories;
+}
+
+@section scripts
+{
+    <environment names="Development">
+        <script src="~/view-resources/Views/Categories/Index.js" asp-append-version="true"></script>
+    </environment>
+
+    <environment names="Staging,Production">
+        <script src="~/view-resources/Views/Categories/Index.min.js" asp-append-version="true"></script>
+    </environment>
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>@L("Categories")</h1>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="col-sm-6">
+                                    <a href="javascript:;" data-toggle="modal" data-target="#CategoryCreateModal" class="btn bg-blue float-sm">
+                                        <i class="fa fa-plus-square"></i>
+                                        @L("CreateNew")
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                @await Html.PartialAsync("~/Views/Category/IndexAdvancedSearch.cshtml")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="CategoriesTable" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th scope="col" class="text-center">@L("CategoryName")</th>
+                                        <th scope="col" class="text-center">@L("CreatedTime")</th>
+                                        <th scope="col" class="text-center">@L("LastEditedTime")</th>
+                                        <th style="width: 150px" scope="col" class="text-center">@L("Actions")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@await Html.PartialAsync("~/Views/Category/_CreateCategoryModal.cshtml", Model)
+
+<div class="modal fade" id="CategoryEditModal" tabindex="-1" role="dialog" aria-labelledby="CategoryEditModalLabel" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <!-- Content for editing category will go here -->
+        </div>
+    </div>
+</div>

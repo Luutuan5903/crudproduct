@@ -22,11 +22,12 @@ namespace Acme.SimpleTaskApp.Products.Dto
 
         public int StockQuantity { get; set; }
 
-        public string Category_Id { get; set; }
+        
 
         public DateTime CreationTime { get; set; }
 
         public DateTime? LastModificationTime { get; set; }
         public string Description { get; set; }
+        public string CategoryName { get; internal set; }
     }
 }

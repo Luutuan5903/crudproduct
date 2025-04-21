@@ -12,12 +12,14 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Acme.SimpleTaskApp.Products.Dto;
 using System.Linq;
-using Acme.SimpleTaskApp.Products.Dtos;
 using System.Linq.Dynamic.Core;
 using Abp.Linq.Extensions;
+using Abp.Authorization;
+using Acme.SimpleTaskApp.Authorization;
 
 namespace Acme.SimpleTaskApp.Products
 {
+    [AbpAuthorize]
     public class ProductAppService : SimpleTaskAppAppServiceBase, IProductAppService
     {
         private readonly IRepository<Product> _productRepository;
@@ -27,73 +29,45 @@ namespace Acme.SimpleTaskApp.Products
             _productRepository = productRepository;
         }
 
-        //    public async Task<PagedResultDto<ProductListDto>> GetPagedAsync(PagedProductDto input)
-        //    {
-        //        var query = _productRepository.GetAll();
-        //        //lọc
-        //        if (!string.IsNullOrWhiteSpace(input.Keyword))
-        //        {
-        //            var keyword = input.Keyword.ToLower();
-        //            query = query.Where(p => p.Name.ToLower().Contains(keyword)
-        //            || p.StockQuantity.ToString().Contains(keyword));
-        //        }
-
-        //        var totalCount = await query.CountAsync();
-
-
-        //        var products = await query
-        //            .OrderBy(input.Sorting)
-        //            .PageBy(input)
-        //            .ToListAsync();
-
-        //        var result = products.Select(p => new ProductListDto
-        //        {
-        //            Id = p.Id,
-        //            Name = p.Name,
-        //            Price = p.Price,
-        //            Images = p.Images,
-        //            StockQuantity = p.StockQuantity,
-        //            Description = p.Description,
-        //            CreationTime = p.CreationTime,
-        //            LastModificationTime = p.LastModificationTime
-        //        }).ToList();
-
-        //        return new PagedResultDto<ProductListDto>(
-        //    totalCount,
-        //    result
-        //);
-        //    }
-
-
-        //    public async Task<ListResultDto<ProductList>> GetAll(GetAllProductsInput input)
-        //    {
-        //        var products = await _productRepository
-        //            .GetAll()
-        //            .ToListAsync();
-
-        //        return new ListResultDto<ProductList>(
-        //            //map tay
-        //            //cách hàm
-        //            ObjectMapper.Map<List<ProductList>>(products)
-        //        );
-        //    }
-
+        // Danh sách sản phẩm (phân trang, lọc, sắp xếp)
         public async Task<PagedResultDto<ProductListDto>> GetAll(GetAllProductsInput input)
         {
-            var query = _productRepository.GetAll();
+            var query = _productRepository.GetAllIncluding(p => p.Category);
 
-            // Lọc theo từ khóa nếu có
+            // Lọc theo từ khóa
             if (!string.IsNullOrWhiteSpace(input.Keyword))
             {
                 var keyword = input.Keyword.ToLower();
                 query = query.Where(p =>
                     p.Name.ToLower().Contains(keyword) ||
+                    p.Description.ToLower().Contains(keyword) ||
                     p.StockQuantity.ToString().Contains(keyword));
+            }
+
+            // Lọc theo khoảng giá
+            if (input.MinPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= input.MinPrice.Value);
+            }
+
+            if (input.MaxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= input.MaxPrice.Value);
+            }
+
+            // Lọc theo khoảng thời gian tạo
+            if (input.CreationTimeFrom.HasValue)
+            {
+                query = query.Where(p => p.CreationTime >= input.CreationTimeFrom.Value);
+            }
+
+            if (input.CreationTimeTo.HasValue)
+            {
+                query = query.Where(p => p.CreationTime <= input.CreationTimeTo.Value);
             }
 
             var totalCount = await query.CountAsync();
 
-            // Phân trang và sắp xếp
             var products = await query
                 .OrderBy(input.Sorting)
                 .PageBy(input)
@@ -108,16 +82,26 @@ namespace Acme.SimpleTaskApp.Products
                 StockQuantity = p.StockQuantity,
                 Description = p.Description,
                 CreationTime = p.CreationTime,
-                LastModificationTime = p.LastModificationTime
+                LastModificationTime = p.LastModificationTime,
+                CategoryName = p.Category != null ? p.Category.Name : null
             }).ToList();
 
             return new PagedResultDto<ProductListDto>(totalCount, result);
         }
 
-        public async System.Threading.Tasks.Task Create([FromForm] CreateProductInput input)
+        [AbpAuthorize(PermissionNames.Pages_Products_Create)]
+        public async Task Create([FromForm] CreateProductInput input)
         {
-            var product = ObjectMapper.Map<Product>(input);
-            product.CreationTime = Clock.Now;
+            var product = new Product
+            {
+                Name = input.Name?.Trim(),
+                Description = input.Description?.Trim(),
+                Price = input.Price,
+                StockQuantity = input.StockQuantity,
+                CategoryId = input.CategoryId,
+                CreationTime = Clock.Now
+            };
+
             if (input.Images != null && input.Images.Length > 0)
             {
                 var fileName = Path.GetFileName(input.Images.FileName);
@@ -127,36 +111,63 @@ namespace Acme.SimpleTaskApp.Products
                 {
                     await input.Images.CopyToAsync(stream);
                 }
-                ;
+
                 product.Images = $"/img/ImageProducts/{fileName}";
             }
+
             await _productRepository.InsertAsync(product);
         }
 
         public async Task<ProductList> GetAsync(EntityDto<int> input)
         {
-            var product = await _productRepository.GetAsync(input.Id);
-            return ObjectMapper.Map<ProductList>(product);
+            var product = await _productRepository
+                .GetAllIncluding(p => p.Category)
+                .FirstOrDefaultAsync(p => p.Id == input.Id);
+
+            if (product == null)
+            {
+                throw new UserFriendlyException("Sản phẩm không tồn tại.");
+            }
+
+            var dto = new ProductList
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                StockQuantity = product.StockQuantity,
+                Images = product.Images,
+                CreationTime = product.CreationTime,
+                LastModificationTime = product.LastModificationTime,
+                CategoryId = product.CategoryId
+            };
+
+            return dto;
         }
 
         [HttpPost]
         public async Task UpdateProductData([FromForm] UpdateProductInput input)
         {
-            //CheckUpdatePermission();
-
             var product = await _productRepository.FirstOrDefaultAsync(p => p.Id == input.Id);
             if (product == null)
             {
                 throw new UserFriendlyException("Sản phẩm không tồn tại.");
             }
-            product.Name = input.Name;
-            product.Description = input.Description;
+
+            product.Name = input.Name?.Trim();
+            product.Description = input.Description?.Trim();
             product.Price = input.Price;
             product.StockQuantity = input.StockQuantity;
             product.LastModificationTime = Clock.Now;
-            if (input.Images != null && input.Images.Length > 0)
+
+            if (!string.IsNullOrEmpty(input.CategoryId))
             {
-                // 1. Xoá ảnh cũ nếu tồn tại
+                product.CategoryId = input.CategoryId;
+            }
+
+            if (input.Images != null && input.Images.Length > 0)
+
+            {
                 if (!string.IsNullOrEmpty(product.Images))
                 {
                     var oldImagePath = Path.Combine("wwwroot", product.Images.TrimStart('/'));
@@ -165,24 +176,25 @@ namespace Acme.SimpleTaskApp.Products
                         System.IO.File.Delete(oldImagePath);
                     }
                 }
-                // 2. Lưu ảnh mới
-                var newFileName = System.Guid.NewGuid().ToString() + Path.GetExtension(input.Images.FileName);
-                var newPath = Path.Combine("wwwroot/img/ImageProducts", newFileName);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(input.Images.FileName);
+                var newPath = Path.Combine("wwwroot/img/ImageProducts", fileName);
 
                 using (var stream = new FileStream(newPath, FileMode.Create))
                 {
                     await input.Images.CopyToAsync(stream);
                 }
-                // 3. Cập nhật đường dẫn ảnh
-                product.Images = "/img/ImageProducts/" + newFileName;
+
+                product.Images = "/img/ImageProducts/" + fileName;
             }
 
             await _productRepository.UpdateAsync(product);
         }
-
+        //xoá sp theo id
         public async Task DeleteAsync(EntityDto<int> input)
         {
-            await _productRepository.DeleteAsync(input.Id); 
+            await _productRepository.DeleteAsync(input.Id);
         }
     }
+
 }

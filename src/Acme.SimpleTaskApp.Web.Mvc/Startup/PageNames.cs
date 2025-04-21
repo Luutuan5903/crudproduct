@@ -9,5 +9,6 @@
         public const string Roles = "Roles"; 
         public const string Products = "Products";
         public const string Tasks = "Tasks";
+        public const string Categories = "Categories";
     }
 }

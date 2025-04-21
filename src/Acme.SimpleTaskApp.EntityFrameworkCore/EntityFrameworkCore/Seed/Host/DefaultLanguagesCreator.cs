@@ -17,6 +17,7 @@ namespace Acme.SimpleTaskApp.EntityFrameworkCore.Seed.Host
             var tenantId = SimpleTaskAppConsts.MultiTenancyEnabled ? null : (int?)MultiTenancyConsts.DefaultTenantId;
             return new List<ApplicationLanguage>
             {
+                new ApplicationLanguage(tenantId, "vi", "Việt Nam", "famfamfam-flags vn"),
                 new ApplicationLanguage(tenantId, "en", "English", "famfamfam-flags us"),
                 new ApplicationLanguage(tenantId, "ar", "العربية", "famfamfam-flags sa"),
                 new ApplicationLanguage(tenantId, "de", "German", "famfamfam-flags de"),

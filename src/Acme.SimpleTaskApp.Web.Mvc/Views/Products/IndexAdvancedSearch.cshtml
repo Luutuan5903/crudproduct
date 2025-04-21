@@ -1,12 +1,186 @@
-﻿<div class="abp-advanced-search">
-    <form id="ProductsSearchForm" class="form-horizontal">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <button type="button" class="btn bg-blue btn-search">
-                    <span class="fas fa-search" aria-hidden="true"></span>
-                </button>
+﻿@using Azure.Core
+
+<style>
+    .filter-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: white;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+        min-width: 300px;
+        border-radius: 4px;
+    }
+    .abp-advanced-search {
+        position: relative;
+    }
+    .filter-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .filter-close {
+        cursor: pointer;
+        font-size: 1.2rem;
+        color: #666;
+    }
+    .filter-close:hover {
+        color: #333;
+    }
+    .price-range-container {
+        padding: 10px 0;
+    }
+    .price-range-values {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    .price-value {
+        font-size: 14px;
+        color: #666;
+    }
+</style>
+
+<!-- Add noUiSlider CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
+
+<div class="abp-advanced-search">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <form id="ProductsSearchForm" class="form-horizontal flex-grow-1" method="get">
+            <!-- Tìm kiếm từ khóa -->
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <button type="submit" class="btn bg-blue btn-search">
+                        <span class="fas fa-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <input type="text" name="Keyword" class="form-control txt-search" placeholder="Tìm kiếm sản phẩm..." value="@Context.Request.Query["Keyword"]" />
             </div>
-            <input type="text" name="Keyword" class="form-control txt-search" placeholder="Nhập tên sản phẩm"/>
+        </form>
+        <button class="btn btn-outline-primary ml-2" type="button" data-toggle="collapse" data-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+            <i class="fas fa-filter"></i> Bộ lọc
+        </button>
+    </div>
+
+    <div class="collapse filter-overlay" id="filterCollapse">
+        <div class="card card-body">
+            <div class="filter-header">
+                <h5 class="mb-0">Bộ lọc</h5>
+                <i class="fas fa-times filter-close" data-toggle="collapse" data-target="#filterCollapse"></i>
+            </div>
+            <form id="FilterForm" class="form-horizontal">
+                <input type="hidden" name="Keyword" value="@Context.Request.Query["Keyword"]" />
+                
+                <!-- Lọc theo khoảng giá -->
+                <div class="form-group">
+                    <label>Khoảng giá</label>
+                    <div class="price-range-container">
+                        <div id="priceRange"></div>
+                        <div class="price-range-values">
+                            <span class="price-value" id="minPrice">0</span>
+                            <span class="price-value" id="maxPrice">100,000,000</span>
+                        </div>
+                        <input type="hidden" name="MinPrice" id="minPriceInput" value="@Context.Request.Query["MinPrice"]" />
+                        <input type="hidden" name="MaxPrice" id="maxPriceInput" value="@Context.Request.Query["MaxPrice"]" />
+                    </div>
+                </div>
+
+                <!-- Lọc theo khoảng thời gian tạo -->
+                <div class="form-group">
+                    <label>Thời gian tạo</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="date" name="CreationTimeFrom" class="form-control" value="@Context.Request.Query["CreationTimeFrom"]" />
+                        </div>
+                        <div class="col-md-6">
+                            <input type="date" name="CreationTimeTo" class="form-control" value="@Context.Request.Query["CreationTimeTo"]" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-right">
+                    <button type="button" class="btn btn-secondary mr-2" onclick="resetFilters()">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Lọc
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
+
+<!-- Add noUiSlider JS -->
+<script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
+
+<script>
+    // Khởi tạo thanh trượt khoảng giá
+    var priceRange = document.getElementById('priceRange');
+    var minPriceInput = document.getElementById('minPriceInput');
+    var maxPriceInput = document.getElementById('maxPriceInput');
+    var minPriceDisplay = document.getElementById('minPrice');
+    var maxPriceDisplay = document.getElementById('maxPrice');
+
+    noUiSlider.create(priceRange, {
+        start: [
+            minPriceInput.value ? parseInt(minPriceInput.value) : 0,
+            maxPriceInput.value ? parseInt(maxPriceInput.value) : 100000000
+        ],
+        connect: true,
+        range: {
+            'min': 0,
+            'max': 100000000
+        },
+        step: 1000,
+        format: {
+            to: function (value) {
+                return Math.round(value);
+            },
+            from: function (value) {
+                return Number(value);
+            }
+        }
+    });
+
+    // Cập nhật giá trị hiển thị và input khi kéo thanh trượt
+    priceRange.noUiSlider.on('update', function (values, handle) {
+        var value = values[handle];
+        
+        if (handle === 0) {
+            minPriceDisplay.innerHTML = formatCurrency(value);
+            minPriceInput.value = value;
+        } else {
+            maxPriceDisplay.innerHTML = formatCurrency(value);
+            maxPriceInput.value = value;
+        }
+    });
+
+    // Hàm format tiền tệ
+    function formatCurrency(value) {
+        return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
+    }
+
+    function resetFilters() {
+        // Reset giá
+        priceRange.noUiSlider.set([0, 100000000]);
+        minPriceInput.value = '';
+        maxPriceInput.value = '';
+        minPriceDisplay.innerHTML = formatCurrency(0);
+        maxPriceDisplay.innerHTML = formatCurrency(100000000);
+        
+        // Reset ngày
+        document.querySelector('input[name="CreationTimeFrom"]').value = '';
+        document.querySelector('input[name="CreationTimeTo"]').value = '';
+    }
+
+    // Xử lý đóng form lọc
+    document.querySelector('.filter-close').addEventListener('click', function() {
+        $('#filterCollapse').collapse('hide');
+    });
+</script>
+
+
+
+

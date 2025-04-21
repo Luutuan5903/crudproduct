@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.Runtime.Validation;
 
-namespace Acme.SimpleTaskApp.Products.Dtos
+namespace Acme.SimpleTaskApp.Categories.Dto
 {
-    public class PagedProductDto : PagedAndSortedResultRequestDto, IShouldNormalize
+    public class GetPagedCategory : PagedAndSortedResultRequestDto, IShouldNormalize
     {
         public string Keyword { get; set; }
 
         public void Normalize()
         {
-            if (string.IsNullOrEmpty(Sorting))
+            if (string.IsNullOrWhiteSpace(Sorting))
             {
                 Sorting = "CreationTime DESC";
             }

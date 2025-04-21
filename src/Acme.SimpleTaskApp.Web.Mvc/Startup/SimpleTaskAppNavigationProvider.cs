@@ -47,6 +47,14 @@ namespace Acme.SimpleTaskApp.Web.Startup
                     )
                 ).AddItem(
                     new MenuItemDefinition(
+                        "Category",
+                        new FixedLocalizableString("Category"),
+                        url: "Category",
+                        icon: "fas fa-box"
+                    )
+                )
+                .AddItem(
+                    new MenuItemDefinition(
                         PageNames.Tenants,
                         L("Tenants"),
                         url: "Tenants",

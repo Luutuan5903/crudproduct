@@ -12,6 +12,9 @@ namespace Acme.SimpleTaskApp.Authorization
             context.CreatePermission(PermissionNames.Pages_Users_Activation, L("UsersActivation"));
             context.CreatePermission(PermissionNames.Pages_Roles, L("Roles"));
             context.CreatePermission(PermissionNames.Pages_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
+            var products = context.CreatePermission(PermissionNames.Pages_Products, L("Products"));
+
+            products.CreateChildPermission(PermissionNames.Pages_Products_Create, L("Create"));
         }
 
         private static ILocalizableString L(string name)

@@ -1,4 +1,5 @@
-﻿@using Acme.SimpleTaskApp.Web.Startup
+﻿@using Acme.SimpleTaskApp.Authorization
+@using Acme.SimpleTaskApp.Web.Startup
 @using Acme.SimpleTaskApp.Web.Models.Products
 @model ProductViewModel
 @{
@@ -14,19 +15,20 @@
     <environment names="Staging,Production">
         <script src="~/view-resources/Views/Products/Index.min.js" asp-append-version="true"></script>
     </environment>
+    
+}
+
+@{
+    var canCreate = await PermissionChecker.IsGrantedAsync(PermissionNames.Pages_Products_Create);
 }
 <section class="content-header">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-6">
-                <h1>@("Sản phẩm")</h1>
+                <h1>@L("Products")</h1>
             </div>
-            <div class="col-sm-6">
-                <a href="javascript:;" data-toggle="modal" data-target="#ProductCreateModal" class="btn bg-blue float-sm-right">
-                    <i class="fa fa-plus-square"></i>
-                    @("Tạo mới")
-                </a>
-            </div>
+           
+
         </div>
     </div>
 </section>
@@ -38,7 +40,13 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-md-6">
-                                <!--Use for bulk actions-->
+                                @if (canCreate)
+                                {
+                                    <button class=" btn bg-blue float-sm" data-toggle="modal" data-target="#ProductCreateModal">
+                                        <i class="fa fa-plus-square"></i>
+                                        @L("CreateNew")
+                                    </button>
+                                }
                             </div>
                             <div class="col-md-6">
                                 @await Html.PartialAsync("~/Views/Products/IndexAdvancedSearch.cshtml")
@@ -51,14 +59,15 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th scope="col" class="text-center">@("Tên sản phẩm")</th>
-                                        <th scope="col" class="text-center">@("Hình ảnh")</th>
-                                        <th scope="col" class="text-center">@("Giá")</th>
-                                        <th scope="col" class="text-center">@("Số lượng trong kho")</th>
-                                        <th scope="col" class="text-center">@("Mô tả sản phẩm")</th>
-                                        <th scope="col" class="text-center">@("Thời gian tạo")</th>
-                                        <th scope="col" class="text-center">@("Thời gian chỉnh sửa")</th>
-                                        <th style="width: 150px" scope="col" class="text-center">@("Thao tác")</th>
+                                        <th scope="col" class="text-center">@L("ProductName")</th>
+                                        <th scope="col" class="text-center">@L("Image")</th>
+                                        <th scope="col" class="text-center">@L("Price")</th>
+                                        <th scope="col" class="text-center">@L("StockQuantity")</th>
+                                        <th scope="col" class="text-center">@L("ProductDescription")</th>
+                                        <th scope="col" class="text-center">@L("CreationTime")</th>
+                                        <th scope="col" class="text-center">@L("EditTime")</th>
+                                        <th scope="col" class="text-center">@L("Category")</th>
+                                        <th style="width: 150px" scope="col" class="text-center">@L("Actions")</th>
                                     </tr>
                                 </thead>
                                 <tbody>

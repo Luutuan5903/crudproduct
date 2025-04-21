@@ -8,7 +8,7 @@
     Layout = null;
 }
 
-@await Html.PartialAsync("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(("Chỉnh Sửa Sản Phẩm")))
+@await Html.PartialAsync("~/Views/Shared/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("EditProduct")))
 
 <form name="ProductEditForm" role="form" class="form-horizontal" enctype="multipart/form-data" method="post">
     <input type="hidden" name="Id" value="@Model.Product.Id" />
@@ -19,7 +19,7 @@
 
                 <!-- Product Name -->
                 <div class="form-group row required">
-                    <label class="col-md-3 col-form-label" for="name">@("Tên sản phẩm")</label>
+                    <label class="col-md-3 col-form-label" for="name">@L("ProductName")</label>
                     <div class="col-md-9">
                         <input id="name" type="text" class="form-control" name="Name" value="@Model.Product.Name" required>
                     </div>
@@ -27,7 +27,7 @@
 
                 <!-- Product Image -->
                 <div class="form-group row required">
-                    <label class="col-md-3 col-form-label" for="image">@("Hình ảnh")</label>
+                    <label class="col-md-3 col-form-label" for="image">@L("Image")</label>
                     <div class="col-md-9">
                         <input id="image" type="file" class="form-control" name="Images">
                     </div>
@@ -35,7 +35,7 @@
 
                 <!-- Display Product Image -->
                 <div class="form-group row">
-                    <label class="col-md-3 col-form-label" style="font-weight: 700">@("Ảnh")</label>
+                    <label class="col-md-3 col-form-label" style="font-weight: 700">@L("Image")</label>
                     <div class="col-md-9">
                         <img src="@Model.Product.Images" style="max-height: 60px; margin-left: 10px;" alt="image" />
                     </div>
@@ -43,7 +43,7 @@
 
                 <!-- Product Price -->
                 <div class="form-group row required">
-                    <label class="col-md-3 col-form-label" for="price">@("Giá")</label>
+                    <label class="col-md-3 col-form-label" for="price">@L("Price")</label>
                     <div class="col-md-9">
                         <input id="price" type="number" class="form-control" name="Price" value="@Model.Product.Price.ToString("0")" required>
                     </div>
@@ -51,7 +51,7 @@
 
                 <!-- Stock Quantity -->
                 <div class="form-group row required">
-                    <label class="col-md-3 col-form-label" for="stockQuantity">@("Số lượng trong kho")</label>
+                    <label class="col-md-3 col-form-label" for="stockQuantity">@L("StockQuantity")</label>
                     <div class="col-md-9">
                         <input id="stockQuantity" type="number" class="form-control" name="StockQuantity" value="@Model.Product.StockQuantity" required>
                     </div>
@@ -59,11 +59,25 @@
 
                 <!-- Product Description -->
                 <div class="form-group row required">
-                    <label class="col-md-3 col-form-label" for="description">@("Mô tả")</label>
+                    <label class="col-md-3 col-form-label" for="description">@L("Description")</label>
                     <div class="col-md-9">
                         <textarea id="description" class="form-control" name="Description" required>@Model.Product.Description</textarea>
                     </div>
                 </div>
+
+                <div class="form-group row required">
+                    <label class="col-md-3 col-form-label" asp-for="CategoryId"></label>
+                    <div class="col-md-9">
+                        <select asp-for="CategoryId" class="form-control" required>
+                            <option value="">@L("SelectCategory")</option>
+                            @foreach (var category in Model.Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
 
             </div>
         </div>

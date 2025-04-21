@@ -17,5 +17,6 @@ namespace Acme.SimpleTaskApp.Products.Dto
         public IFormFile Images { get; set; }
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
+        public string CategoryId { get; set; }
     }
 }

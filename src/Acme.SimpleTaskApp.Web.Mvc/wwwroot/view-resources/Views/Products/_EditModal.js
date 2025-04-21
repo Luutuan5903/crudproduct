@@ -1,16 +1,17 @@
 ﻿(function ($) {
     var _productService = abp.services.app.product,
+        _categoryService = abp.services.app.category,
         l = abp.localization.getSource('SimpleTaskApp'),
         _$modal = $('#ProductEditModal'),
         _$form = _$modal.find('form');
 
+    // Validate form
     _$form.validate({
         rules: {
             Name: {
                 required: true,
                 minlength: 3
             },
-            
             Price: {
                 required: true,
                 number: true,
@@ -25,9 +26,8 @@
         messages: {
             Name: {
                 required: "Vui lòng nhập tên sản phẩm",
-                maxlength: "Tên sản phẩm có ít nhất 3 kí tự"
+                minlength: "Tên sản phẩm phải có ít nhất 3 kí tự"
             },
-            
             Price: {
                 required: "Vui lòng nhập giá",
                 number: "Giá phải là số",
@@ -48,17 +48,14 @@
             $(element).removeClass('is-invalid');
         }
     });
+
+    // Gửi dữ liệu lưu sản phẩm
     function save() {
         if (!_$form.valid()) {
             return;
         }
 
         var formData = new FormData(_$form[0]);
-
-        // Kiểm tra tất cả dữ liệu trong formData
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ':', pair[1]);
-        }
 
         abp.ui.setBusy(_$modal);
         $.ajax({
@@ -67,9 +64,19 @@
             data: formData,
             processData: false,
             contentType: false,
-            success: function () {
+            success: function (response) {
+                // Cập nhật UI mà không cần tải lại trang
+                var updatedProduct = response; // Dữ liệu trả về sau khi sửa thành công
+
+                // Cập nhật các giá trị trong giao diện
+                $('#ProductName_' + updatedProduct.id).text(updatedProduct.name);
+                $('#ProductPrice_' + updatedProduct.id).text(updatedProduct.price);
+                $('#ProductStock_' + updatedProduct.id).text(updatedProduct.stockQuantity);
+
+                // Đóng modal và reset form
                 _$modal.modal('hide');
                 _$form[0].reset();
+
                 abp.message.success('Cập nhật thông tin sản phẩm thành công');
                 abp.event.trigger('product.edited');
             },
@@ -82,12 +89,13 @@
         });
     }
 
-
+    // Bắt sự kiện khi click nút lưu
     _$form.closest('div.modal-content').find(".save-button").click(function (e) {
         e.preventDefault();
         save();
     });
 
+    // Bắt sự kiện nhấn Enter để submit
     _$form.find('input').on('keypress', function (e) {
         if (e.which === 13) {
             e.preventDefault();
@@ -95,20 +103,8 @@
         }
     });
 
-    $(document).on("click", ".view-image-btn", function () {
-        var imageUrl = $(this).data("image");
-        console.log("Image URL:", imageUrl);
-
-        // Hiển thị ảnh trong modal
-        $("#imageModal img").attr("src", imageUrl);
-        $("#imageModal").modal("show");
+    abp.event.on('category.edited', function () {
+        $('#CategoriesTable').DataTable().ajax.reload();
     });
-
-    abp.event.on('product.edited', function () {
-        $('#ProductsTable').DataTable().ajax.reload();
-    });
-
-
-    
 
 })(jQuery);

@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<localizationDictionary culture="vi">
+	<texts>
+		<text name="HomePage" value="Trang chủ" />
+		<text name="About" value="Giới thiệu" />
+		<text name="WelcomeMessage" value="Chào mừng đến với SimpleTaskApp!" />
+		<text name="FormIsNotValidMessage" value="Mẫu không hợp lệ. Vui lòng kiểm tra và sửa lỗi." />
+		<text name="TenantNameCanNotBeEmpty" value="Tên thuê bao không được để trống" />
+		<text name="InvalidUserNameOrPassword" value="Tên người dùng hoặc mật khẩu không hợp lệ" />
+		<text name="ThereIsNoTenantDefinedWithName{0}" value="Không có thuê bao nào được định nghĩa với tên {0}" />
+		<text name="TenantIsNotActive" value="Thuê bao {0} không hoạt động." />
+		<text name="UserIsNotActiveAndCanNotLogin" value="Người dùng {0} không hoạt động và không thể đăng nhập." />
+		<text name="UserEmailIsNotConfirmedAndCanNotLogin">Địa chỉ email của bạn chưa được xác nhận. Bạn không thể đăng nhập.</text>
+		<text name="UserLockedOutMessage">Tài khoản người dùng đã bị khóa. Vui lòng thử lại sau.</text>
+		<text name="PleaseEnterLoginInformation" value="Vui lòng nhập thông tin đăng nhập" />
+		<text name="TenancyName" value="Tên thuê bao" />
+		<text name="UserNameOrEmail" value="Tên người dùng hoặc email" />
+		<text name="Password" value="Mật khẩu" />
+		<text name="ResetPassword" value="Đặt lại mật khẩu" />
+		<text name="UpdatePassword" value="Cập nhật mật khẩu" />
+		<text name="RememberMe" value="Nhớ tôi" />
+		<text name="LogIn" value="Đăng nhập" />
+		<text name="LoginFailed" value="Đăng nhập thất bại!" />
+		<text name="NameSurname" value="Họ và tên" />
+		<text name="UserName" value="Tên người dùng" />
+		<text name="Name" value="Tên" />
+		<text name="Surname" value="Tên" />
+		<text name="EmailAddress" value="Địa chỉ email" />
+		<text name="Tenants" value="Thuê bao" />
+		<text name="SavedSuccessfully" value="Lưu thành công" />
+		<text name="CreateNewTenant" value="Tạo thuê bao mới" />
+		<text name="AdminEmailAddress" value="Địa chỉ email quản trị viên" />
+		<text name="AdminPassword" value="Mật khẩu quản trị viên" />
+		<text name="Save" value="Lưu" />
+		<text name="Cancel" value="Hủy" />
+		<text name="TenantName_Regex_Description" value="Tên thuê bao phải có ít nhất 2 ký tự, bắt đầu bằng chữ cái và tiếp theo là chữ cái, số, dấu gạch ngang hoặc dấu gạch dưới." />
+		<text name="DefaultPasswordIs" value="Mật khẩu mặc định là {0}" />
+		<text name="CanBeEmptyToLoginAsHost" value="Có thể để trống để đăng nhập vào host." />
+		<text name="Register" value="Đăng ký" />
+		<text name="OrLoginWith" value="Hoặc đăng nhập với" />
+		<text name="WaitingForActivationMessage" value="Tài khoản của bạn đang chờ kích hoạt bởi quản trị viên hệ thống." />
+		<text name="TenantSelection" value="Chọn thuê bao" />
+		<text name="TenantSelection_Detail" value="Vui lòng chọn một trong các thuê bao sau." />
+		<text name="Logout" value="Đăng xuất" />
+		<text name="RegisterFormUserNameInvalidMessage">Vui lòng không nhập địa chỉ email làm tên người dùng.</text>
+		<text name="DatabaseConnectionString" value="Chuỗi kết nối cơ sở dữ liệu" />
+		<text name="Users" value="Người dùng" />
+		<text name="IsActive" value="Đang hoạt động" />
+		<text name="FullName" value="Họ và tên đầy đủ" />
+		<text name="CreateNewUser" value="Tạo người dùng mới" />
+		<text name="Yes" value="Có" />
+		<text name="No" value="Không" />
+		<text name="Optional" value="Tùy chọn" />
+		<text name="LeaveEmptyToSwitchToHost" value="Để trống để chuyển sang host" />
+		<text name="CurrentTenant" value="Thuê bao hiện tại" />
+		<text name="NotSelected" value="Chưa chọn" />
+		<text name="Change" value="Thay đổi" />
+		<text name="ChangeTenant" value="Thay đổi thuê bao" />
+		<text name="MultiLevelMenu" value="Menu đa cấp" />
+		<text name="Back" value="Quay lại" />
+		<text name="SuccessfullyRegistered" value="Đã đăng ký thành công" />
+		<text name="WaitingForEmailActivation" value="Địa chỉ email của bạn đang chờ kích hoạt" />
+		<text name="Roles" value="Vai trò" />
+		<text name="DisplayName" value="Tên hiển thị" />
+		<text name="EditRole" value="Chỉnh sửa vai trò" />
+		<text name="EditTenant" value="Chỉnh sửa thuê bao" />
+		<text name="EditUser" value="Chỉnh sửa người dùng" />
+		<text name="TenantIdIsNotActive{0}" value="TenantId {0} không hoạt động" />
+		<text name="UnknownTenantId{0}" value="TenantId {0} không hợp lệ" />
+		<text name="ThisFieldIsRequired" value="Trường này là bắt buộc" />
+		<text name="PleaseWait" value="Vui lòng chờ..." />
+		<text name="Administration" value="Quản trị" />
+		<text name="ClearAll" value="Xóa tất cả" />
+		<text name="ClearOthers" value="Xóa các cái khác" />
+		<text name="LabelOptions" value="Tùy chọn nhãn" />
+		<text name="Permissions" value="Quyền" />
+		<text name="RoleDescription" value="Mô tả vai trò" />
+		<text name="Refresh" value="Tải lại" />
+		<text name="Create" value="Tạo" />
+		<text name="UserDetails" value="Chi tiết người dùng" />
+		<text name="UserRoles" value="Vai trò người dùng" />
+		<text name="ConfirmPassword" value="Xác nhận mật khẩu" />
+		<text name="Version" value="Phiên bản" />
+		<text name="On" value="Bật" />
+		<text name="Off" value="Tắt" />
+		<text name="AreYouSureWantToDelete" value="Bạn chắc chắn muốn xóa {0}?" />
+		<text name="SuccessfullyDeleted" value="Đã xóa thành công" />
+		<text name="StartTyping" value="Bắt đầu gõ" />
+		<text name="Skins" value="Giao diện" />
+		<text name="Settings" value="Cài đặt" />
+		<text name="Filter" value="Lọc" />
+		<text name="CurrentPassword" value="Mật khẩu hiện tại" />
+		<text name="NewPassword" value="Mật khẩu mới" />
+		<text name="ConfirmNewPassword" value="Xác nhận mật khẩu mới" />
+		<text name="PasswordsDoNotMatch" value="Mật khẩu không khớp" />
+		<text name="PasswordsMustBeAtLeast8CharactersContainLowercaseUppercaseNumber" value="Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ thường, chữ hoa và số" />
+		<text name="UserDeleteWarningMessage" value="Người dùng {0} sẽ bị xóa." />
+		<text name="RoleDeleteWarningMessage" value="Vai trò {0} sẽ bị xóa và không còn gán cho người dùng nào." />
+		<text name="TenantDeleteWarningMessage" value="Thuê bao {0} sẽ bị xóa." />
+		<text name="SearchWithThreeDot" value="Tìm kiếm..." />
+		<text name="PleaseEnterAtLeastNCharacter" value="Vui lòng nhập ít nhất {0} ký tự" />
+		<text name="PleaseEnterNoMoreThanNCharacter" value="Vui lòng nhập không quá {0} ký tự" />
+		<text name="InvalidPhoneNumber" value="Số điện thoại không hợp lệ" />
+		<text name="InvalidEmailAddress" value="Địa chỉ email không hợp lệ" />
+		<text name="Remove" value="Xóa" />
+		<text name="Categories" value="Danh mục" />
+		<text name="CategoryName" value="Tên danh mục" />
+		<text name="CreatedTime" value="Thời gian tạo" />
+		<text name="Status" value="Trạng thái" />
+		<text name="UpdatedTime" value="Thời gian cập nhật" />
+		<text name="IsPublic" value="Công khai" />
+		<text name="IsDeleted" value="Đã xóa" />
+		<text name="LastEditedTime" value="Thời gian cập nhật " />
+		<text name="Actions" value="Hành Động " />
+		<text name="CreateNew" value="Tạo Mới " />
+		<text name="Product" value="Sản Phẩm " />
+		<text name="Category" value="Danh Mục " />
+		<text name="Products" value="Sản Phẩm " />
+		<text name="ProductName" value="Tên Sản Phẩm " />
+		<text name="Image" value="Ảnh  " />
+		<text name="Price" value="Giá " />
+<text name="StockQuantity" value="Số lượng tồn " />
+<text name="ProductDescription" value="Mô tả sản phẩm " />
+<text name="CreationTime" value="Thời gian tạo " />
+<text name="EditTime" value="Thời gian sửa " />
+<text name="Edit" value=" Sửa " />
+<text name="Delete" value="Xoá " />
+<text name="SelectCategory" value="Chọn Danh Mục " />
+<text name="CreateNewProduct" value="Tạo Mới Sản Phẩm " />
+<text name="ProductDetails" value="Chi Tiết Sản Phẩm " />
+<text name="CreateNewCategory" value="Tạo Mới Danh Mục " />
+<text name="CategoryCode" value="ID Danh Mục " />
+<text name="EditCategory" value="Chỉnh Sửa Danh Mục " />
+<text name="Description" value="Chỉnh Sửa Mô Tả Sản Phẩm " />
+	
+	</texts>
+</localizationDictionary>

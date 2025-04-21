@@ -10,11 +10,20 @@ using System;
 namespace Acme.SimpleTaskApp.Products.Dto;
 public class GetAllProductsInput : PagedAndSortedResultRequestDto, IShouldNormalize
 {
+    // Lọc theo khoảng giá
+    public decimal? MinPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
+
+    // Lọc theo khoảng thời gian tạo
+    public DateTime? CreationTimeFrom { get; set; }
+    public DateTime? CreationTimeTo { get; set; }
+    
+    // Tìm kiếm theo từ khóa
     public string Keyword { get; set; }
 
     public void Normalize()
     {
-        if (string.IsNullOrWhiteSpace(Sorting))
+        if (string.IsNullOrEmpty(Sorting) || Sorting == "0 asc")
         {
             Sorting = "CreationTime DESC";
         }
@@ -35,7 +44,7 @@ public class ProductList : EntityDto, IHasCreationTime
 
     public int StockQuantity { get; set; }
 
-    public string Category_Id { get; set; }
+    public string CategoryId { get; set; }
 
     public DateTime CreationTime { get; set; }
 

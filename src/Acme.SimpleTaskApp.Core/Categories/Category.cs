@@ -20,6 +20,7 @@ namespace Acme.SimpleTaskApp.Categories
         public string Name { get; set; }
         public ICollection<Product> Products { get; set; }
         public DateTime CreationTime { get; set; }
+        public DateTime? LastModificationTime { get; set; }
 
         public Category()
         {

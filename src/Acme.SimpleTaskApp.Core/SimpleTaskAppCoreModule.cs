@@ -20,6 +20,8 @@ namespace Acme.SimpleTaskApp
         public override void PreInitialize()
         {
             Configuration.Auditing.IsEnabledForAnonymousUsers = true;
+            Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
+
 
             // Declare entity types
             Configuration.Modules.Zero().EntityTypes.Tenant = typeof(Tenant);
@@ -37,6 +39,7 @@ namespace Acme.SimpleTaskApp
             Configuration.Settings.Providers.Add<AppSettingProvider>();
             
             Configuration.Localization.Languages.Add(new LanguageInfo("fa", "فارسی", "famfamfam-flags ir"));
+            Configuration.Localization.Languages.Add(new LanguageInfo("vi", "Việt Nam", "famfamfam-flags vn"));
             
             Configuration.Settings.SettingEncryptionConfiguration.DefaultPassPhrase = SimpleTaskAppConsts.DefaultPassPhrase;
             SimpleStringCipher.DefaultPassPhrase = SimpleTaskAppConsts.DefaultPassPhrase;
